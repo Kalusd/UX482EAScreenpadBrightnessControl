@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.screenpad-brightness" path="/org/gnome/shell/extensions/screenpad-brightness/">
+    <key name="brightness" type="i">
+      <default>255</default>
+      <summary>Screenpad brightness</summary>
+      <description>The current brightness level of the screenpad</description>
+    </key>
+  </schema>
+</schemalist>

@@ -1,0 +1,10 @@
+{
+    "uuid": "screenpad-brightness@local",
+    "name": "Screenpad Brightness",
+    "description": "Control the brightness of the second screen",
+    "version": 1,
+    "shell-version": ["3.38", "40", "41", "42", "43"],
+    "url": "https://github.com/Kalusd/UX482EAScreenpadBrightnessControl",
+    "settings-schema": "org.gnome.shell.extensions.screenpad-brightness",
+    "css": "stylesheet.css"
+}
