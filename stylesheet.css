@@ -1,4 +1,16 @@
-.brightness-slider {
-    min-width: 200px;
-    max-width: 200px;
+.brightness-box {
+    padding: 0px; /* Remove padding to ensure the box occupies the full width */
 }
+
+.brightness-spacer {
+    width: 10px; /* Space between icon and slider */
+}
+
+.system-status-icon {
+    margin-right: 4px; /* Space between the icon and the slider */
+}
+
+.slider {
+    /* No need for x_expand in CSS, handled in JS */
+}
+
