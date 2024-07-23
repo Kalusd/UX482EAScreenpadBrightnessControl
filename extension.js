@@ -4,17 +4,21 @@ const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 const Slider = imports.ui.slider;
 
+const BRIGHTNESS_FILE = '/sys/class/leds/asus::screenpad/brightness';
+const POLLING_INTERVAL = 1000; // Intervalle de vérification en millisecondes
+
 const BrightnessIndicator = GObject.registerClass(
 class BrightnessIndicator extends PanelMenu.Button {
     _init() {
         super._init(0.0, 'Screenpad Brightness');
 
         // Create a box to hold the icon and slider
-        let box = new St.BoxLayout({
+        this.box = new St.BoxLayout({
             vertical: false,
             style_class: 'brightness-box',
             x_expand: true,   // Allow the box to expand horizontally
-            y_expand: false   // Prevent the box from expanding vertically
+            y_expand: false,  // Prevent the box from expanding vertically
+            height: 24,       // Set a height if necessary
         });
 
         // Create an icon
@@ -32,42 +36,88 @@ class BrightnessIndicator extends PanelMenu.Button {
         this.brightnessSlider.x_expand = true; // Allow the slider to expand horizontally
 
         // Create and add a spacer between the icon and the slider
-        let spacer = new St.BoxLayout({ 
+        let spacer = new St.BoxLayout({
             style_class: 'brightness-spacer',
             width: 10, // Adjust as necessary
         });
 
         // Add the icon, spacer, and slider to the box
-        box.add_child(this.brightnessIcon);
-        box.add_child(spacer);
-        box.add_child(this.brightnessSlider);
+        this.box.add_child(this.brightnessIcon);
+        this.box.add_child(spacer);
+        this.box.add_child(this.brightnessSlider);
 
         // Add the box to the menu item
         this.brightnessMenuItem = new PopupMenu.PopupBaseMenuItem({ activate: false });
-        this.brightnessMenuItem.add_child(box);
+        this.brightnessMenuItem.add_child(this.box);
 
         // Insert the new brightness slider below the primary brightness slider
         Main.panel.statusArea.aggregateMenu.menu.addMenuItem(this.brightnessMenuItem, 2);
-        this._loadCurrentBrightness();
+
+        // Start polling for brightness changes
+        this._startPolling();
+
+        // Flag to avoid triggering _onSliderValueChanged during programmatic updates
+        this._updatingSlider = false;
+    }
+
+    _startPolling() {
+        this._pollingTimeout = GLib.timeout_add(GLib.PRIORITY_DEFAULT, POLLING_INTERVAL, () => {
+            this._loadCurrentBrightness();
+            return GLib.SOURCE_CONTINUE; // Continue polling
+        });
+    }
+
+    _stopPolling() {
+        if (this._pollingTimeout) {
+            GLib.source_remove(this._pollingTimeout);
+            this._pollingTimeout = null;
+        }
     }
 
     _loadCurrentBrightness() {
-        let [res, out, err, status] = GLib.spawn_command_line_sync('cat /sys/class/leds/asus::screenpad/brightness');
+        let [res, out, err, status] = GLib.spawn_command_line_sync(`cat ${BRIGHTNESS_FILE}`);
         if (res) {
             let brightness = parseInt(out.toString().trim());
-            this.brightnessSlider.value = (brightness - 10) / 245;
+            this._updateSliderWithoutTriggeringEvent(brightness);
+            this._updateVisibility(brightness);
             log(`Screenpad Brightness Extension: Current brightness loaded: ${brightness}`);
         } else {
             log(`Screenpad Brightness Extension: Error loading current brightness: ${err}`);
         }
     }
 
+    _updateSliderWithoutTriggeringEvent(brightness) {
+        // Convert brightness to slider value
+        let sliderValue = (brightness - 10) / 245;
+
+        // Avoid triggering the _onSliderValueChanged method
+        this._updatingSlider = true;
+        this.brightnessSlider.value = sliderValue;
+        this._updatingSlider = false;
+    }
+
+    _updateVisibility(brightness) {
+        if (brightness === 0) {
+            this.box.hide(); // Hide the box (which contains the icon and slider)
+        } else {
+            this.box.show(); // Show the box
+        }
+    }
+
     _onSliderValueChanged(slider) {
-        let brightness = Math.round(slider.value * 245) + 10;
-        log(`Screenpad Brightness Extension: Setting brightness to: ${brightness}`);
-        
-        // Execute the command
-        GLib.spawn_command_line_async(`/bin/sh -c 'echo ${brightness} | tee /sys/class/leds/asus::screenpad/brightness'`);
+        // Only handle changes if not updating programmatically
+        if (!this._updatingSlider) {
+            let brightness = Math.round(slider.value * 245) + 10;
+            log(`Screenpad Brightness Extension: Setting brightness to: ${brightness}`);
+
+            // Execute the command to change brightness
+            GLib.spawn_command_line_async(`/bin/sh -c 'echo ${brightness} | tee ${BRIGHTNESS_FILE}'`);
+        }
+    }
+
+    destroy() {
+        this._stopPolling();
+        super.destroy();
     }
 });
 
