@@ -9,11 +9,11 @@ Pour rendre l'installation plus simple, il est conseillé de désactiver le Dém
 J'ai eu quelques problèmes lors de l'installation, l'appareil `/sys/class/leds/asus::screenpad` n'apparaissait pas et le rétro-éclairage du clavier ne fonctionnait plus. Si vous obtenez les mêmes problèmes, suivre les étapes de ce [commentaire](https://github.com/Plippo/asus-wmi-screenpad/issues/50#issuecomment-1710176541) à débloqué la situation de mon côté.  
 Vous devriez donc normalement avoir le dossier suivant `/sys/class/leds/asus::screenpad`.
 
-## Script supplémentaire  
+## Script supplémentaire
 
-Le script ```toggle_screenpad.sh``` permet de basculer entre 3 niveaux prédéterminés de luminosité, d'une façon similaire a ScreenXpert sur Windows.  
+Le script `toggle_screenpad.sh` permet de basculer entre 3 niveaux prédéterminés de luminosité, d'une façon similaire a ScreenXpert sur Windows.  
 Il est possible d'affecter une touche du clavier à ce programme depuis : Paramètres > Clavier > Voir et personnaliser les raccourcis > Raccourcis personnalisés > +  
-Puis, donnez un nom à votre raccourci, le champ "Commande" représente le chemin vers le script (ex: ~/toggle_screenpad.sh), et enfin, assignez votre raccourci à une touche ou une combinaison de touche grâce au champ "Raccourci".  
+Puis, donnez un nom à votre raccourci, le champ "Commande" représente le chemin vers le script (ex: ~/toggle_screenpad.sh), et enfin, assignez votre raccourci à une touche ou une combinaison de touche grâce au champ "Raccourci".
 
 ## Installation de l'extension
 
@@ -76,3 +76,7 @@ gnome-extensions enable screenpad-brightness@local
 ```
 
 ## Emplacement de l'extension
+
+Le slider ajouté par l'extension se trouve dans le menu déroulant des paramètres GNOME, en dessous du slider de luminosité de l'écran principal.  
+![ExtensionSliderLocation](https://github.com/user-attachments/assets/29b38f4a-81d8-400d-9765-500d580a0898)
+
