@@ -35,7 +35,8 @@ cd ~/.local/share/gnome-shell/extensions/screenpad-brightness@local
     └── org.gnome.shell.extensions.screenpad-brightness.gschema.xml
 ```
 
-4. Compilez le schéma :
+4. Compilez le schéma :  
+  Le schéma devrait normalement déjà être compilé, mais la commande suivante permet de le compiler au besoin.  
 ```
 glib-compile-schemas ~/.local/share/gnome-shell/extensions/screenpad-brightness@local/schemas
 ```
