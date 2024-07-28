@@ -6,7 +6,7 @@ Cette extension GNOME permet de contrôler la luminosité du Screenpad d'ordinat
 
 L'installation se fait en suivant les étapes de ce dépôt : [asus-wmi-screenpad](https://github.com/Plippo/asus-wmi-screenpad)  
 Pour rendre l'installation plus simple, il est conseillé de désactiver le Démarrage Sécurisé dans le microprogramme BIOS/UEFI.  
-J'ai eu quelques problèmes lors de l'installation, l'appareil `/sys/class/leds/asus::screenpad` n'apparaissait pas et le rétro-éclairage du clavier ne fonctionnait plus. Si vous obtenez les mêmes problèmes, suivre les étapes de ce [commentaire](https://github.com/Plippo/asus-wmi-screenpad/issues/50#issuecomment-1710176541) à débloqué la situation de mon côté.  
+J'ai eu quelques problèmes lors de l'installation, l'appareil `/sys/class/leds/asus::screenpad` n'apparaissait pas et le rétro-éclairage du clavier ne fonctionnait plus. Si vous obtenez les mêmes problèmes, suivre les étapes de ce [commentaire](https://github.com/Plippo/asus-wmi-screenpad/issues/50#issuecomment-1710176541) (sans suivre la 7ème étape) à débloqué la situation de mon côté.  
 Vous devriez donc normalement avoir le dossier suivant `/sys/class/leds/asus::screenpad`.
 
 ## Script supplémentaire
